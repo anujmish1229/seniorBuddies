@@ -1,4 +1,5 @@
-/* Original CSS */
+/* Original CSS you gave me */
+
 * {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
@@ -63,9 +64,8 @@ nav a:hover {
 
 /* Hero Section */
 #hero {
-    background: url('bg.JPG') no-repeat center top / cover;
-    height: 100vh; /* or min-height: 100vh; */
-    width: 100%;
+    background: url('bg.JPG') no-repeat center center/cover;
+    height: 100vh;
     color: #fff;
     display: flex;
     flex-direction: column;
@@ -74,7 +74,6 @@ nav a:hover {
     text-align: center;
     padding: 20px;
 }
-
 
 #hero h2 {
     font-size: 3rem;
@@ -85,23 +84,24 @@ nav a:hover {
     font-size: 1.5rem;
 }
 
-/* About Us Team Section */
-main {
-    padding: 20px;
+/* === New isolated Senior Buddies team cards CSS === */
+
+.sb-team-wrapper {
     max-width: 1200px;
-    margin: 0 auto;
+    margin: 20px auto;
+    padding: 0 10px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+        Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 
-/* team flex container */
-.team-container {
+.sb-team-container {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
     justify-content: center;
 }
 
-/* individual team card */
-.team-card {
+.sb-team-card {
     display: flex;
     flex-direction: row;
     background: #fff;
@@ -113,63 +113,62 @@ main {
     max-width: 500px;
 }
 
-/* photo in card */
-.team-card img {
+.sb-team-card img {
     width: 150px;
     height: 150px;
     object-fit: cover;
+    flex-shrink: 0;
 }
 
-/* team member details */
-.team-info {
+.sb-team-info {
     padding: 15px;
     flex: 1;
 }
 
-.team-info h3 {
+.sb-team-info h3 {
     margin-top: 0;
     font-size: 1.4em;
     color: #333;
 }
 
-.team-info h4 {
+.sb-team-info h4 {
     margin: 5px 0 10px 0;
     font-weight: normal;
     color: #97e6f9e6;
 }
 
-.team-info p {
+.sb-team-info p {
     font-size: 0.9em;
     color: #555;
     margin: 6px 0;
 }
 
-.contact {
+.sb-team-contact {
     margin-top: 10px;
     font-size: 0.85em;
 }
 
-/* responsiveness: 3 per row on large screens */
+/* Responsive: 3 cards per row on wide screens */
 @media (min-width: 900px) {
-    .team-card {
+    .sb-team-card {
         flex: 0 0 calc(33.333% - 20px);
     }
 }
 
-/* stack on very small screens */
+/* Stack cards vertically on small screens */
 @media (max-width: 500px) {
-    .team-card {
+    .sb-team-card {
         flex-direction: column;
         align-items: center;
         text-align: center;
     }
 
-    .team-card img {
+    .sb-team-card img {
         width: 100%;
         height: auto;
     }
 
-    .team-info {
+    .sb-team-info {
         padding: 10px;
     }
 }
