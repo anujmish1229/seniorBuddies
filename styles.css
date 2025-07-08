@@ -63,7 +63,7 @@ nav a:hover {
 
 /* Hero Section */
 #hero {
-    background: url('bg.JPG') no-repeat center center/cover;
+    background: url('bg.JPG') no-repeat center center/contain;
     height: 100vh;
     color: #fff;
     display: flex;
