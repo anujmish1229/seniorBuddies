@@ -81,3 +81,116 @@ nav a:hover {
 #hero p {
     font-size: 1.5rem;
 }
+/* general reset & base */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f9f9f9;
+    color: #333;
+}
+
+h1, h2, h3, h4 {
+    margin: 0;
+}
+
+p {
+    line-height: 1.5;
+}
+
+/* hero section */
+#hero {
+    background: #97e6f9e6;
+    color: #000;
+    text-align: center;
+    padding: 40px 20px;
+}
+
+/* team section container */
+main {
+    padding: 20px;
+}
+
+/* team flex container */
+.team-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* individual team card */
+.team-card {
+    display: flex;
+    flex-direction: row;
+    background: #fff;
+    border-left: 5px solid #97e6f9e6;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    overflow: hidden;
+    width: 100%;
+    max-width: 500px;
+}
+
+/* photo in card */
+.team-card img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+/* team member details */
+.team-info {
+    padding: 15px;
+    flex: 1;
+}
+
+.team-info h3 {
+    margin-top: 0;
+    font-size: 1.4em;
+    color: #333;
+}
+
+.team-info h4 {
+    margin: 5px 0 10px 0;
+    font-weight: normal;
+    color: #97e6f9e6;
+}
+
+.team-info p {
+    font-size: 0.9em;
+    color: #555;
+    margin: 6px 0;
+}
+
+/* contact block */
+.contact {
+    margin-top: 10px;
+    font-size: 0.85em;
+}
+
+/* responsiveness: 3 per row on large screens */
+@media (min-width: 900px) {
+    .team-card {
+        flex: 0 0 calc(33.333% - 20px);
+    }
+}
+
+/* stack on very small screens */
+@media (max-width: 500px) {
+    .team-card {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+
+    .team-card img {
+        width: 100%;
+        height: auto;
+    }
+
+    .team-info {
+        padding: 10px;
+    }
+}
