@@ -1,4 +1,4 @@
-<footer>
+<footer style="background-color: #999;">
     <center>
         <p>&copy; Copyright Senior Buddies 2025<br>Developed by Anuj Mishra</p>
     </center>
