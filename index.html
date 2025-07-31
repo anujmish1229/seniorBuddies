@@ -4,32 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles.css">
-    <a href="index.html"><link rel="icon" type="image/png" href="logo.png">
-    <title>Senior Buddies</title></a>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-LN+7fdVzj6u52u30Kp6M/trliBMCMKTyK833zpbD+pXdCLuTusPj697FH4R/5mcr" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js" integrity="sha384-ndDqU0Gzau9qJ1lfW4pNLlhNTkCfHzAVBReH9diLvGRem5+R9g2FzA8ZGN954O5Q" crossorigin="anonymous"></script>
+    <link rel="icon" type="image/png" href="logo.png">
+    <title>Senior Buddies</title>
 </head>
 <body>
-    <header id="navbar">
-        <div class="logo">
-            <img src="logo.png" alt="Senior Buddies Logo">
-            <h1>Senior Buddies</h1>
-        </div>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="about/index.html">About Us</a></li>
-                <li><a href="events/index.html">Events</a></li>
-                <li><a href="contact/index.html">Contact</a></li>
-            </ul>
+    <header>
+        <nav class="navbar navbar-expand-lg bg-white shadow-sm fixed-top border-bottom">
+            <div class="container">
+                <a class="navbar-brand d-flex align-items-center text-secondary fw-bold" href="#">
+                    <img src="logo.png" alt="Logo" width="30" height="30" class="me-2">
+                    Senior Buddies
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto gap-2">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link active"
+                                href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link" href="about">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link" href="events">Events</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link" href="join">Join</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link" href="donate">Donate</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark fw-medium px-3 py-2 rounded hover-link" href="contact">Contact</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </nav>
     </header>
     <main>
-        <section id="hero">
+        <section class="shadow" id="hero">
             <h2>Welcome to Senior Buddies</h2>
             <p>Bridging the intergenerational gap</p>
         </section>
     </main>
-    <footer>
-        <center><p>&copy; Copyright Senior Buddies 2024</p><p>Developed by Anuj Mishra</p></center>
+    <footer class="bg-dark text-light pt-5 pb-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <a class="navbar-brand fs-5 fw-bold text-light d-flex align-items-center mb-2" href="#">
+                        <img src="logo.png" alt="Logo" width="30" height="30" class="me-2">
+                        Senior Buddies Durham
+                    </a>
+                    <p class="fs-7 mb-0">
+                        Bridging the intergenerational gap.
+                    </p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">Contact Us</h5>
+                    <p class="mb-1">
+                        <i class="bi bi-telephone-fill me-2"></i>
+                        <a href="tel:6477976920" class="text-light text-decoration-none">(647) 797-6920</a>
+                    </p>
+                    <p class="mb-1">
+                        <i class="bi bi-envelope-fill me-2"></i>
+                        <a href="mailto:info@seniorbuddies.co" 
+                            class="text-light text-decoration-none">info@seniorbuddies.co</a>
+                    </p>
+                    <p class="mb-0">
+                        <i class="bi bi-geo-alt-fill me-2"></i>
+                        <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+                            class="text-light text-decoration-none">Our Address</a>
+                    </p>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <h5 class="fw-bold mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-light text-decoration-none">Home</a></li>
+                        <li><a href="about" class="text-light text-decoration-none">About</a></li>
+                        <li><a href="events" class="text-light text-decoration-none">Events</a></li>
+                        <li><a href="join" class="text-light text-decoration-none">Join</a></li>
+                        <li><a href="donate" class="text-light text-decoration-none">Donate</a></li>
+                        <li><a href="contact" class="text-light text-decoration-none">Contact</a></li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="border-secondary my-3">
+            <div class="text-center text-light small">
+                © 2025 Senior Buddies Durham. All rights reserved.
+            </div>
+        </div>
     </footer>
     <script src="index.js"></script>
 </body>
