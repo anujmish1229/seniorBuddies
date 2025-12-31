@@ -1,9 +1,35 @@
-import { useState } from "react";
+import { useState, FormEvent } from "react";
 import Layout from "@/components/Layout";
 import { Heart, Users, Calendar, CheckCircle } from "lucide-react"
 
 const Join = () => {
   const [isVolunteer, setIsVolunteer] = useState(true);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setStatus("submitting");
+
+    const form = e.currentTarget;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch("/", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData as any).toString(),
+      });
+
+      if (response.ok) {
+        setStatus("success");
+        form.reset();
+      } else {
+        setStatus("error");
+      }
+    } catch (error) {
+      setStatus("error");
+    }
+  };
 
   return (
     <Layout>
@@ -46,7 +72,10 @@ const Join = () => {
                     <div className="flex items-center justify-center gap-4">
                       <button
                         type="button"
-                        onClick={() => setIsVolunteer(false)}
+                        onClick={() => {
+                          setIsVolunteer(false);
+                          setStatus("idle");
+                        }}
                         className={`px-6 py-3 rounded-lg font-body font-semibold transition-all ${
                           !isVolunteer
                             ? "bg-primary text-primary-foreground shadow-soft"
@@ -57,7 +86,10 @@ const Join = () => {
                       </button>
                       <button
                         type="button"
-                        onClick={() => setIsVolunteer(true)}
+                        onClick={() => {
+                          setIsVolunteer(true);
+                          setStatus("idle");
+                        }}
                         className={`px-6 py-3 rounded-lg font-body font-semibold transition-all ${
                           isVolunteer
                             ? "bg-primary text-primary-foreground shadow-soft"
@@ -69,11 +101,28 @@ const Join = () => {
                     </div>
                   </div>
                   
+                  {status === "success" && (
+                    <div className="mb-6 p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
+                      <p className="text-green-800 dark:text-green-200 font-body">
+                        Thank you! Your {isVolunteer ? "application" : "interest form"} has been submitted successfully. We'll be in touch soon!
+                      </p>
+                    </div>
+                  )}
+
+                  {status === "error" && (
+                    <div className="mb-6 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                      <p className="text-red-800 dark:text-red-200 font-body">
+                        There was an error submitting your form. Please try again or contact us directly.
+                      </p>
+                    </div>
+                  )}
+
                   <form 
                     name={isVolunteer ? "join-volunteer" : "senior-interest"} 
                     method="POST" 
                     data-netlify="true"
                     netlify-honeypot="bot-field"
+                    onSubmit={handleSubmit}
                     className="space-y-6"
                   >
                     <input type="hidden" name="form-name" value={isVolunteer ? "join-volunteer" : "senior-interest"} />
@@ -157,10 +206,15 @@ const Join = () => {
 
                     <button
                       type="submit"
-                      className="w-full bg-primary text-primary-foreground px-6 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-soft hover:shadow-card font-body flex items-center justify-center gap-2"
+                      disabled={status === "submitting"}
+                      className="w-full bg-primary text-primary-foreground px-6 py-4 rounded-lg font-semibold hover:bg-primary/90 transition-all shadow-soft hover:shadow-card font-body flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       <Heart className="h-5 w-5" />
-                      {isVolunteer ? "Submit Volunteer Application" : "Submit Interest Form"}
+                      {status === "submitting" 
+                        ? "Submitting..." 
+                        : isVolunteer 
+                          ? "Submit Volunteer Application" 
+                          : "Submit Interest Form"}
                     </button>
 
                     <p className="text-xs text-muted-foreground font-body text-center">
