@@ -131,7 +131,6 @@ const Index = () => {
               <Button asChild size="xl" className="bg-card text-foreground hover:bg-card/90">
                 <Link to="/join">
                   Join as a Volunteer
-                  <ArrowRight className="h-5 w-5" />
                 </Link>
               </Button>
               <Button asChild size="xl" variant="outline" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:text-primary-foreground">
