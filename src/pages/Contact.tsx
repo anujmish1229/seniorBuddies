@@ -11,21 +11,31 @@ const Contact = () => {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+    const params = new URLSearchParams();
+
+    // Convert FormData to URLSearchParams
+    formData.forEach((value, key) => {
+      params.append(key, value.toString());
+    });
 
     try {
       const response = await fetch("/", {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: new URLSearchParams(formData as any).toString(),
+        body: params.toString(),
       });
 
-      if (response.ok) {
+      if (response.ok || response.status === 200) {
         setStatus("success");
         form.reset();
+        // Reset status after 5 seconds
+        setTimeout(() => setStatus("idle"), 5000);
       } else {
+        console.error("Form submission failed:", response.status, response.statusText);
         setStatus("error");
       }
     } catch (error) {
+      console.error("Form submission error:", error);
       setStatus("error");
     }
   };
@@ -74,6 +84,7 @@ const Contact = () => {
                   <form 
                     name="contact" 
                     method="POST" 
+                    action="/"
                     data-netlify="true"
                     netlify-honeypot="bot-field"
                     onSubmit={handleSubmit}
