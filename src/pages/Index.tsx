@@ -125,8 +125,8 @@ const Index = () => {
             <h2 className="font-heading font-bold text-3xl md:text-4xl lg:text-5xl text-primary-foreground mb-6">
               Ready to Make a Difference?
             </h2>
-            <p className="text-primary-foreground/80 font-body text-lg mb-8 leading-relaxed">
-              Whether you're a senior looking for companionship or a young person wanting to give back, we'd love to have you join our community.
+            <p className="text-primary-foreground font-body text-lg mb-8 leading-relaxed">
+              If you're a youth wanting to give back, we'd love to have you join our community.
             </p>
             <div className="flex flex-wrap justify-center gap-4">
               <Button asChild size="xl" className="bg-card text-foreground hover:bg-card/90">

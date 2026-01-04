@@ -1,9 +1,13 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import { Mail, Linkedin } from "lucide-react";
 import tanishkaImage from "@/assets/tanishka.png";
 import anujImage from "@/assets/anuj.png";
 import harshImage from "@/assets/harsh.png";
+
+// Import all youth volunteer images
+const youthVolunteerImages = import.meta.glob("@/assets/teamMembers/*.jpeg", { eager: true, import: "default" }) as Record<string, string>;
+const youthVolunteerImageArray = Object.values(youthVolunteerImages);
 
 const shadowColors = ['#ffd1d1', '#ffdd84', '#f9defd', '#dcf5cf', '#f5e1fa', '#d0f4f4', '#fff5ba'];
 
@@ -34,8 +38,29 @@ const teamMembers = [
   },
 ];
 
+// Shuffle array function
+const shuffleArray = <T,>(array: T[]): T[] => {
+  const shuffled = [...array];
+  for (let i = shuffled.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+};
+
 const Team = () => {
   const [memberColors, setMemberColors] = useState<string[]>([]);
+  const [rowImages] = useState(() => {
+    // Each row gets all images, but in different random orders
+    return [
+      shuffleArray(youthVolunteerImageArray),
+      shuffleArray(youthVolunteerImageArray),
+      shuffleArray(youthVolunteerImageArray),
+    ];
+  });
+  const row1Ref = useRef<HTMLDivElement>(null);
+  const row2Ref = useRef<HTMLDivElement>(null);
+  const row3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = "Senior Buddies - Team";
@@ -45,6 +70,52 @@ const Team = () => {
     });
     setMemberColors(colors);
   }, []);
+
+  // Infinite scroll for each row at different speeds
+  useEffect(() => {
+    const scrollSpeeds = [0.8, 1, 1.2]; // Different speeds for each row (pixels per frame) - increased for faster scrolling
+    const refs = [row1Ref, row2Ref, row3Ref];
+    const animationFrameIds: (number | null)[] = [null, null, null];
+
+    refs.forEach((ref, index) => {
+      const container = ref.current;
+      if (!container) return;
+
+      const content = container.children[0] as HTMLElement;
+      if (!content) return;
+
+      // Wait for layout to calculate width
+      const initScroll = () => {
+        const contentWidth = content.offsetWidth;
+        const singleSetWidth = contentWidth / 2; // We duplicate content, so half is one set
+        
+        let translateX = 0;
+
+        const animate = () => {
+          translateX -= scrollSpeeds[index];
+          
+          // Reset when scrolled past one set
+          if (Math.abs(translateX) >= singleSetWidth) {
+            translateX = 0;
+          }
+          
+          content.style.transform = `translateX(${translateX}px)`;
+          animationFrameIds[index] = requestAnimationFrame(animate);
+        };
+
+        animationFrameIds[index] = requestAnimationFrame(animate);
+      };
+
+      // Wait a bit for layout and images to load
+      setTimeout(initScroll, 200);
+    });
+
+    return () => {
+      animationFrameIds.forEach(id => {
+        if (id !== null) cancelAnimationFrame(id);
+      });
+    };
+  }, [rowImages]);
   return (
     <Layout>
       {/* Hero */}
@@ -100,6 +171,65 @@ const Team = () => {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Youth Volunteers Gallery */}
+      <section className="py-20 bg-background">
+        <div className="container mx-auto px-4 mb-12">
+          <div className="max-w-3xl mx-auto text-center">
+            <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground mb-4">
+              Our Youth Volunteers
+            </h2>
+            <p className="text-muted-foreground font-body text-lg leading-relaxed">
+              Meet the amazing young people making a difference in our community.
+            </p>
+          </div>
+        </div>
+
+        {/* Three rows of scrolling images */}
+        <div className="space-y-4 overflow-hidden">
+          {[0, 1, 2].map((rowIndex) => {
+            const rowRef = rowIndex === 0 ? row1Ref : rowIndex === 1 ? row2Ref : row3Ref;
+            const images = rowImages[rowIndex];
+            
+            return (
+              <div
+                key={rowIndex}
+                ref={rowRef}
+                className="overflow-x-hidden"
+                style={{
+                  scrollbarWidth: 'none',
+                  msOverflowStyle: 'none',
+                }}
+              >
+                <div 
+                  className="flex gap-2"
+                  style={{ 
+                    width: 'max-content',
+                    willChange: 'transform',
+                  }}
+                >
+                  {/* Render 2 sets for seamless loop */}
+                  {[1, 2].map((setIndex) => (
+                    images.map((image, imageIndex) => (
+                      <div
+                        key={`row-${rowIndex}-set-${setIndex}-${imageIndex}`}
+                        className="flex-shrink-0"
+                      >
+                        <img
+                          src={image}
+                          alt={`Youth volunteer ${imageIndex + 1}`}
+                          className="h-48 object-contain rounded-sm"
+                          style={{ width: 'auto', display: 'block' }}
+                        />
+                      </div>
+                    ))
+                  ))}
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 
