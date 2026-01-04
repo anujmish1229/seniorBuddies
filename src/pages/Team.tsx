@@ -73,7 +73,7 @@ const Team = () => {
 
   // Infinite scroll for each row at different speeds
   useEffect(() => {
-    const scrollSpeeds = [0.8, 1, 1.2]; // Different speeds for each row (pixels per frame)
+    const scrollSpeeds = [1, 0.8, 1.2]; // Different speeds for each row (pixels per frame)
     const refs = [row1Ref, row2Ref, row3Ref];
     const animationFrameIds: (number | null)[] = [null, null, null];
 
