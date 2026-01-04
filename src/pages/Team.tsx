@@ -73,7 +73,7 @@ const Team = () => {
 
   // Infinite scroll for each row at different speeds
   useEffect(() => {
-    const scrollSpeeds = [0.8, 1, 1.2]; // Different speeds for each row (pixels per frame) - increased for faster scrolling
+    const scrollSpeeds = [0.8, 1, 1.2]; // Different speeds for each row (pixels per frame)
     const refs = [row1Ref, row2Ref, row3Ref];
     const animationFrameIds: (number | null)[] = [null, null, null];
 
@@ -84,30 +84,58 @@ const Team = () => {
       const content = container.children[0] as HTMLElement;
       if (!content) return;
 
-      // Wait for layout to calculate width
+      // Wait for images to load and layout to calculate width
       const initScroll = () => {
-        const contentWidth = content.offsetWidth;
-        const singleSetWidth = contentWidth / 2; // We duplicate content, so half is one set
+        // Wait for all images in the row to load
+        const images = content.querySelectorAll('img');
+        let loadedCount = 0;
         
-        let translateX = 0;
+        const checkAllLoaded = () => {
+          loadedCount++;
+          if (loadedCount < images.length) return;
+          
+          // Small delay to ensure layout is calculated
+          setTimeout(() => {
+            // Force a reflow to get accurate measurements
+            void content.offsetWidth;
+            const contentWidth = content.scrollWidth;
+            const singleSetWidth = contentWidth / 2; // We duplicate content, so half is one set
+            
+            let translateX = 0;
 
-        const animate = () => {
-          translateX -= scrollSpeeds[index];
-          
-          // Reset when scrolled past one set
-          if (Math.abs(translateX) >= singleSetWidth) {
-            translateX = 0;
-          }
-          
-          content.style.transform = `translateX(${translateX}px)`;
-          animationFrameIds[index] = requestAnimationFrame(animate);
+            const animate = () => {
+              translateX -= scrollSpeeds[index];
+              
+              // Reset when scrolled past one set - add the width back to create seamless loop
+              if (translateX <= -singleSetWidth) {
+                translateX += singleSetWidth;
+              }
+              
+              content.style.transform = `translateX(${translateX}px)`;
+              animationFrameIds[index] = requestAnimationFrame(animate);
+            };
+
+            animationFrameIds[index] = requestAnimationFrame(animate);
+          }, 50);
         };
 
-        animationFrameIds[index] = requestAnimationFrame(animate);
+        if (images.length === 0) {
+          // No images, start immediately
+          checkAllLoaded();
+        } else {
+          images.forEach((img) => {
+            if (img.complete) {
+              checkAllLoaded();
+            } else {
+              img.addEventListener('load', checkAllLoaded, { once: true });
+              img.addEventListener('error', checkAllLoaded, { once: true });
+            }
+          });
+        }
       };
 
-      // Wait a bit for layout and images to load
-      setTimeout(initScroll, 200);
+      // Wait a bit for DOM to be ready
+      setTimeout(initScroll, 100);
     });
 
     return () => {
