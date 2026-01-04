@@ -38,6 +38,7 @@ const Team = () => {
   const [memberColors, setMemberColors] = useState<string[]>([]);
 
   useEffect(() => {
+    document.title = "Senior Buddies - Team";
     // Randomly assign colors to each team member
     const colors = teamMembers.map(() => {
       return shadowColors[Math.floor(Math.random() * shadowColors.length)];

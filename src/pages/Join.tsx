@@ -1,10 +1,14 @@
-import { useState, FormEvent } from "react";
+import { useState, useEffect, FormEvent } from "react";
 import Layout from "@/components/Layout";
 import { Heart, Users, Calendar, CheckCircle } from "lucide-react"
 
 const Join = () => {
   const [isVolunteer, setIsVolunteer] = useState(true);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
+
+  useEffect(() => {
+    document.title = "Senior Buddies - Join";
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

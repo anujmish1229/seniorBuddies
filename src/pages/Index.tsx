@@ -12,6 +12,7 @@ const Index = () => {
   const [shadowColor, setShadowColor] = useState(shadowColors[0]);
 
   useEffect(() => {
+    document.title = "Senior Buddies - Bridging the Intergenerational Gap";
     const randomColor = shadowColors[Math.floor(Math.random() * shadowColors.length)];
     setShadowColor(randomColor);
   }, []);

@@ -1,7 +1,12 @@
+import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Heart, Target, Eye, CheckCircle } from "lucide-react";
 
 const About = () => {
+  useEffect(() => {
+    document.title = "Senior Buddies - About";
+  }, []);
+
   return (
     <Layout>
       {/* Hero */}

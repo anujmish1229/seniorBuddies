@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Calendar, MapPin, Clock, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -16,6 +17,10 @@ const upcomingEvents = [
 ];
 
 const Events = () => {
+  useEffect(() => {
+    document.title = "Senior Buddies - Events";
+  }, []);
+
   return (
     <Layout>
       {/* Hero */}
