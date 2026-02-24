@@ -1,12 +1,7 @@
-import { useEffect } from "react";
 import Layout from "@/components/Layout";
 import { Heart, Target, Eye, CheckCircle } from "lucide-react";
 
 const About = () => {
-  useEffect(() => {
-    document.title = "Senior Buddies - About";
-  }, []);
-
   return (
     <Layout>
       {/* Hero */}
@@ -17,7 +12,7 @@ const About = () => {
               About Senior Buddies
             </h1>
             <p className="text-lg text-muted-foreground font-body leading-relaxed">
-              Building meaningful connections between generations in Durham Region since 2014.
+              Building meaningful connections between generations in Durham Region since 2022.
             </p>
           </div>
         </div>

@@ -1,13 +1,9 @@
-import { useState, useEffect, FormEvent } from "react";
+import { useState, FormEvent } from "react";
 import Layout from "@/components/Layout";
 import { Mail, Phone, MapPin, Clock } from "lucide-react";
 
 const Contact = () => {
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
-
-  useEffect(() => {
-    document.title = "Senior Buddies - Contact";
-  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();

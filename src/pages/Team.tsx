@@ -55,10 +55,12 @@ const Team = () => {
     return [
       shuffleArray(youthVolunteerImageArray),
       shuffleArray(youthVolunteerImageArray),
+      shuffleArray(youthVolunteerImageArray),
     ];
   });
   const row1Ref = useRef<HTMLDivElement>(null);
   const row2Ref = useRef<HTMLDivElement>(null);
+  const row3Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     document.title = "Senior Buddies - Team";
@@ -71,9 +73,9 @@ const Team = () => {
 
   // Infinite scroll for each row at different speeds
   useEffect(() => {
-    const scrollSpeeds = [0.7, 0.5]; // Different speeds for each row (pixels per frame)
-    const refs = [row1Ref, row2Ref];
-    const animationFrameIds: (number | null)[] = [null, null];
+    const scrollSpeeds = [0.7, 0.5, 0.9]; // Different speeds for each row (pixels per frame)
+    const refs = [row1Ref, row2Ref, row3Ref];
+    const animationFrameIds: (number | null)[] = [null, null, null];
 
     refs.forEach((ref, index) => {
       const container = ref.current;
@@ -213,10 +215,10 @@ const Team = () => {
           </div>
         </div>
 
-        {/* Two rows of scrolling images */}
+        {/* Three rows of scrolling images */}
         <div className="space-y-4 overflow-hidden">
-          {[0, 1].map((rowIndex) => {
-            const rowRef = rowIndex === 0 ? row1Ref : row2Ref;
+          {[0, 1, 2].map((rowIndex) => {
+            const rowRef = rowIndex === 0 ? row1Ref : rowIndex === 1 ? row2Ref : row3Ref;
             const images = rowImages[rowIndex];
             
             return (
