@@ -13,5 +13,10 @@ This function fetches events from Eventbrite API for the Senior Buddies organize
    - Add a new variable: `EVENTBRITE_API_KEY` with your API key as the value
 3. Redeploy your site for the changes to take effect
 
-The function will automatically fetch upcoming events from the Senior Buddies Eventbrite organizer page.
+The function fetches events from the Senior Buddies Eventbrite organizer page.
+
+### Query Parameters
+
+- `?range=upcoming` (default) - Live events with a start date in the future.
+- `?range=past` - Events that have already started/ended.
 

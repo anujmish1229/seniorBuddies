@@ -1,0 +1,36 @@
+{
+  "upcoming": [
+    {
+      "id": "fallback-upcoming-1",
+      "name": { "text": "Sample Upcoming Event — Replace With Real Eventbrite Data" },
+      "description": {
+        "text": "This is placeholder content shown only if the live Eventbrite feed can't be reached. Edit src/data/events-fallback.json with real event details, or remove this entry once the Eventbrite integration is confirmed working."
+      },
+      "start": { "utc": "2026-09-01T17:00:00Z", "local": "2026-09-01T13:00:00", "timezone": "America/Toronto" },
+      "end": { "utc": "2026-09-01T19:00:00Z", "local": "2026-09-01T15:00:00" },
+      "venue": {
+        "name": "Senior Buddies Community Hub",
+        "address": { "city": "Whitby", "region": "ON" }
+      },
+      "url": "/contact",
+      "capacity": 0
+    }
+  ],
+  "past": [
+    {
+      "id": "fallback-past-1",
+      "name": { "text": "Sample Past Event — Replace With Real Eventbrite Data" },
+      "description": {
+        "text": "This is placeholder content shown only if the live Eventbrite feed can't be reached. Edit src/data/events-fallback.json with real event details, or remove this entry once the Eventbrite integration is confirmed working."
+      },
+      "start": { "utc": "2026-01-15T17:00:00Z", "local": "2026-01-15T12:00:00", "timezone": "America/Toronto" },
+      "end": { "utc": "2026-01-15T19:00:00Z", "local": "2026-01-15T14:00:00" },
+      "venue": {
+        "name": "Senior Buddies Community Hub",
+        "address": { "city": "Oshawa", "region": "ON" }
+      },
+      "url": "/contact",
+      "capacity": 0
+    }
+  ]
+}
