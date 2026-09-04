@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Heart, Users, Calendar } from "lucide-react";
 import Layout from "@/components/Layout";
-import logo from "@/assets/logo.png";
-import heroImage from "@/assets/hero-image.png";
+import logo from "@/assets/logo.webp";
+import heroImage from "@/assets/hero-image.webp";
 
 const shadowColors = ['#ffd1d1', '#ffdd84', '#f9defd', '#dcf5cf', '#f5e1fa', '#d0f4f4', '#fff5ba'];
 

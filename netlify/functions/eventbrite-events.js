@@ -27,11 +27,16 @@ exports.handler = async (event, context) => {
     };
   }
 
+  const isPast = event.queryStringParameters?.range === 'past';
+
+  const params = isPast
+    ? 'status=live,started,ended,completed&order_by=start_desc&time_filter=previous'
+    : 'status=live&order_by=start_asc&time_filter=current_future';
+
   try {
-    // Fetch events from Eventbrite API
-    // Only get upcoming events (status=live and start_date in the future)
-    const url = `https://www.eventbriteapi.com/v3/organizers/${ORGANIZER_ID}/events/?status=live&order_by=start_asc&time_filter=current_future`;
-    
+    // Fetch events from Eventbrite API, either upcoming or past depending on ?range=
+    const url = `https://www.eventbriteapi.com/v3/organizers/${ORGANIZER_ID}/events/?${params}`;
+
     const response = await fetch(url, {
       headers: {
         'Authorization': `Bearer ${apiKey}`,
