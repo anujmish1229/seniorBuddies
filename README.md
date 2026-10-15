@@ -1,190 +1,102 @@
-# Senior Buddies Website
+# Senior Buddies
 
-A modern, responsive website for Senior Buddies - an intergenerational community program connecting seniors with youth volunteers in Durham Region, Ontario.
+Website for **Senior Buddies**, a youth-led nonprofit in Durham Region, Ontario, that pairs youth volunteers with seniors to reduce loneliness and build connections across generations. The organization has run since 2022.
 
-🌐 **Live Site**: [seniorbuddiesdurham.ca](https://seniorbuddiesdurham.ca)
+**Live site:** https://seniorbuddiesdurham.ca
 
-## About Senior Buddies
+![Senior Buddies home page](docs/screenshot.png)
+<!-- TODO: add a 1280×800 screenshot of the home page at docs/screenshot.png -->
 
-Senior Buddies is a youth-led nonprofit organization that bridges the intergenerational gap by creating meaningful connections between seniors and youth volunteers. Since 2014, we've been building community bonds, reducing loneliness, and empowering both generations through shared experiences and mutual learning.
+## Who it's for
 
-### Our Mission
+- **Youth volunteers** looking to join and sign up for events
+- **Seniors and their families** who want to take part
+- **Community partners and donors** learning about the program and team
 
-To build meaningful intergenerational connections between youth and seniors in order to reduce loneliness, strengthen community belonging, and create positive shared experiences that benefit both generations.
+## My role
 
-### What We Do
-
-- **Organize Events**: Intergenerational events and activities for seniors and youth
-- **Create Safe Spaces**: Welcoming social spaces that reduce isolation
-- **Provide Leadership Opportunities**: Empower youth volunteers with leadership roles
-- **Encourage Mutual Learning**: Foster respect and cultural sharing across generations
+I'm a board member of Senior Buddies, and I built and maintain the website: design, React front end, the Eventbrite integration via a Netlify Function, Netlify Forms for sign-ups, and deployment.
 
 ## Features
 
-- 🎨 **Modern UI/UX**: Beautiful, responsive design built with Tailwind CSS and shadcn/ui components
-- 🚀 **Fast Performance**: Built with Vite for optimized build times and fast page loads
-- 📱 **Fully Responsive**: Mobile-first design that works seamlessly on all devices
-- 🎯 **SEO Optimized**: Comprehensive meta tags, Open Graph, and semantic HTML
-- 🧭 **Client-Side Routing**: Smooth navigation using React Router
-- ♿ **Accessible**: Built with accessibility best practices in mind
-- 🌙 **Theme Support**: Modern design system with consistent theming
+- **Live events from Eventbrite.** A Netlify Function proxies the Eventbrite API, so the API key never reaches the browser. If the API is unavailable, the Events page falls back to bundled example events.
+- **Volunteer, senior and contact forms** handled by Netlify Forms (no backend), with honeypot spam protection.
+- **Team page** driven by `src/data/team-members.json`, with WebP photos.
+- Responsive layout, SEO and Open Graph meta tags, client-side routing.
 
-## Tech Stack
+## Tech stack
 
-### Core Technologies
-- **React 18** - UI library
-- **TypeScript** - Type-safe development
-- **Vite** - Build tool and dev server
-- **React Router DOM** - Client-side routing
+| Layer      | Choice                                                  |
+| ---------- | ------------------------------------------------------- |
+| Framework  | React 19 + TypeScript                                   |
+| Build tool | Vite 8                                                  |
+| Routing    | React Router 7                                          |
+| Styling    | Tailwind CSS 4 + shadcn/ui (Radix) primitives           |
+| Data       | TanStack Query                                          |
+| Serverless | Netlify Functions (Eventbrite proxy), Netlify Forms     |
+| Hosting    | Netlify (auto-deploys from `main`)                      |
+| CI         | GitHub Actions: lint, typecheck, build                  |
 
-### Styling & UI
-- **Tailwind CSS** - Utility-first CSS framework
-- **shadcn/ui** - High-quality component library
-- **Radix UI** - Accessible component primitives
-- **Lucide React** - Icon library
-
-### State Management & Data
-- **TanStack Query (React Query)** - Server state management
-- **React Hook Form** - Form management
-- **Zod** - Schema validation
-
-### Additional Tools
-- **ESLint** - Code linting
-- **PostCSS** - CSS processing
-- **Autoprefixer** - CSS vendor prefixing
-
-## Project Structure
+## Architecture
 
 ```
-├── public/              # Static assets
-│   ├── favicon.ico
-│   ├── robots.txt
-│   └── _redirects      # Netlify SPA redirect rules
-├── src/
-│   ├── assets/         # Images and media files
-│   ├── components/     # React components
-│   │   ├── ui/         # shadcn/ui components
-│   │   ├── Footer.tsx
-│   │   ├── Layout.tsx
-│   │   ├── Navbar.tsx
-│   │   └── ScrollToTop.tsx
-│   ├── hooks/          # Custom React hooks
-│   ├── lib/            # Utility functions
-│   ├── pages/          # Page components
-│   │   ├── About.tsx
-│   │   ├── Contact.tsx
-│   │   ├── Events.tsx
-│   │   ├── Index.tsx
-│   │   ├── Join.tsx
-│   │   ├── NotFound.tsx
-│   │   └── Team.tsx
-│   ├── App.tsx         # Main app component
-│   ├── main.tsx        # Entry point
-│   └── index.css       # Global styles
-├── index.html          # HTML template
-├── netlify.toml        # Netlify deployment configuration
-├── package.json        # Dependencies and scripts
-├── tailwind.config.ts  # Tailwind configuration
-├── tsconfig.json       # TypeScript configuration
-└── vite.config.ts      # Vite configuration
+Browser (React SPA)
+   │
+   ├── static assets ─────────────► Netlify CDN (dist/)
+   │
+   ├── GET /.netlify/functions/eventbrite-events?range=upcoming|past
+   │        └─► Netlify Function ──► Eventbrite API (EVENTBRITE_API_KEY, server-side only)
+   │
+   └── POST form submissions ─────► Netlify Forms
+                                     (forms declared as hidden <form>s in index.html
+                                      so Netlify detects them at build time)
 ```
 
-## Getting Started
+```
+index.html                 HTML shell, meta tags, hidden Netlify form definitions
+netlify.toml               Build command, SPA redirect, `netlify dev` settings
+netlify/functions/         eventbrite-events.js (see its README)
+public/                    _redirects, favicon, robots.txt
+src/
+  App.tsx                  Route table
+  pages/                   Index, About, Team, Events, Contact, Join, NotFound
+  components/              Layout, Navbar, Footer, icons/, ui/ (shadcn)
+  hooks/use-netlify-form.ts  Submits forms to Netlify
+  data/                    team-members.json, events-fallback.json
+  assets/                  WebP images
+```
 
-### Prerequisites
+## Local setup
 
-- **Node.js** 18.x or higher
-- **npm** 9.x or higher (or yarn/pnpm)
+Requires Node.js 20.19+ or 22.12+ (see `.nvmrc`) and npm.
 
-### Installation
-
-1. Clone the repository:
 ```bash
-git clone https://github.com/anujmish1229/anujmish1229.github.io.git
-cd anujmish1229
-```
-
-2. Install dependencies:
-```bash
+git clone https://github.com/anujmish1229/seniorBuddies.git
+cd seniorBuddies
 npm install
+npm run dev              # http://localhost:8080 (frontend only; events use fallback data)
 ```
 
-3. Start the development server:
+To run the Eventbrite function locally as well, use the Netlify CLI:
+
 ```bash
-npm run dev
+npx netlify-cli dev      # serves the site and /.netlify/functions/*
 ```
 
-4. Open your browser and navigate to `http://localhost:8080`
+| Script              | What it does                       |
+| ------------------- | ---------------------------------- |
+| `npm run dev`       | Vite dev server                    |
+| `npm run build`     | Production build into `dist/`      |
+| `npm run preview`   | Serve the production build         |
+| `npm run lint`      | ESLint                             |
+| `npm run typecheck` | TypeScript type check              |
 
-### Available Scripts
+## Environment variables
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run build:dev` - Build for development
-- `npm run preview` - Preview production build locally
-- `npm run lint` - Run ESLint
+Set these in the Netlify dashboard (Site configuration → Environment variables), or in a local `.env` for `netlify dev`:
 
-## Deployment
+| Name                 | Used by                     | Purpose                     |
+| -------------------- | --------------------------- | --------------------------- |
+| `EVENTBRITE_API_KEY` | `netlify/functions` (server) | Eventbrite private API token |
 
-This project is configured for deployment on Netlify.
-
-### Netlify Configuration
-
-The project includes:
-- `netlify.toml` - Build configuration and redirect rules
-- `public/_redirects` - SPA routing support
-
-### Build Settings
-
-- **Build Command**: `npm run build`
-- **Publish Directory**: `dist`
-- **Node Version**: 18.x or higher
-
-### Deploy to Netlify
-
-1. Connect your GitHub repository to Netlify
-2. Netlify will automatically detect the build settings from `netlify.toml`
-3. Deploy! The site will rebuild automatically on every push to your main branch
-
-Alternatively, you can deploy manually using the Netlify CLI:
-```bash
-npm install -g netlify-cli
-netlify deploy --prod
-```
-
-## Pages
-
-- **Home (`/`)** - Landing page with hero section and feature overview
-- **About (`/about`)** - Organization story, mission, vision, and values
-- **Team (`/team`)** - Meet the team members
-- **Events (`/events`)** - Upcoming and past events
-- **Contact (`/contact`)** - Contact information and form
-- **Join (`/join`)** - Volunteer registration and information
-- **404 (`/*`)** - Custom not found page
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-
-## Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is private and proprietary.
-
-## Credits
-
-**Developed by**: Anuj Mishra  
-**GitHub**: [@anujmish1229](https://github.com/anujmish1229)
-
-Built for Senior Buddies
-
----
-
-For questions or support, please visit [seniorbuddies.ca/contact](https://seniorbuddies.ca/contact)
-
+The frontend uses no environment variables.
