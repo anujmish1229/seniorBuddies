@@ -133,7 +133,7 @@ const Team = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">
@@ -239,7 +239,7 @@ const Team = () => {
                     images.map((image, imageIndex) => (
                       <div
                         key={`row-${rowIndex}-set-${setIndex}-${imageIndex}`}
-                        className="flex-shrink-0"
+                        className="shrink-0"
                       >
                         <img
                           src={image}

@@ -299,7 +299,7 @@ const Events = () => {
                     )}
                   </div>
 
-                  <Button asChild variant={tabRange === "upcoming" ? "hero" : "outline"} className="shrink-0">
+                  <Button asChild variant={tabRange === "upcoming" ? "hero" : "outline-solid"} className="shrink-0">
                     <a href={event.url} target="_blank" rel="noopener noreferrer">
                       {tabRange === "upcoming" ? "Register" : "View Event"}
                       <ArrowRight className="h-4 w-4" />
@@ -317,7 +317,7 @@ const Events = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">Events</h1>
