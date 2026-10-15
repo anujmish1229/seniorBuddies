@@ -34,7 +34,7 @@ const Index = () => {
               </div>
               
               <div className="space-y-4">
-                <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight text-balance">
+                <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight md:leading-none text-balance">
                   Bridging the{" "}
                   <span className="text-primary">Intergenerational</span>{" "}
                   Gap
