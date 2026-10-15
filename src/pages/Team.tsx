@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Layout from "@/components/Layout";
-import { Mail, Linkedin } from "lucide-react";
+import { Mail } from "lucide-react";
+import LinkedinIcon from "@/components/icons/LinkedinIcon";
 import tanishkaImage from "@/assets/tanishka.webp";
 import anujImage from "@/assets/anuj.png";
 import harshImage from "@/assets/harsh.webp";
@@ -188,7 +189,7 @@ const Team = () => {
                       aria-label={`${member.name}'s LinkedIn profile`}
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      <Linkedin className="h-5 w-5" />
+                      <LinkedinIcon className="h-5 w-5" />
                     </a>
                   </div>
                 </div>

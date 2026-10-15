@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Calendar, MapPin, Clock, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import eventsFallback from "@/data/events-fallback.json";
 
 interface EventbriteEvent {
@@ -299,7 +299,7 @@ const Events = () => {
                     )}
                   </div>
 
-                  <Button asChild variant={tabRange === "upcoming" ? "hero" : "outline-solid"} className="shrink-0">
+                  <Button asChild variant={tabRange === "upcoming" ? "hero" : "outline"} className="shrink-0">
                     <a href={event.url} target="_blank" rel="noopener noreferrer">
                       {tabRange === "upcoming" ? "Register" : "View Event"}
                       <ArrowRight className="h-4 w-4" />

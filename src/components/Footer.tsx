@@ -1,4 +1,4 @@
-import { Instagram, Facebook, ArrowUp } from "lucide-react";
+import { ArrowUp } from "lucide-react";
 import titleImage from "@/assets/title.webp";
 
 const Footer = () => {
