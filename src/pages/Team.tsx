@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import Layout from "@/components/Layout";
-import { Mail, Linkedin } from "lucide-react";
+import { Mail } from "lucide-react";
+import LinkedinIcon from "@/components/icons/LinkedinIcon";
 import tanishkaImage from "@/assets/tanishka.webp";
 import anujImage from "@/assets/anuj.png";
 import harshImage from "@/assets/harsh.webp";
@@ -133,7 +134,7 @@ const Team = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">
@@ -188,7 +189,7 @@ const Team = () => {
                       aria-label={`${member.name}'s LinkedIn profile`}
                       className="text-muted-foreground hover:text-primary transition-colors"
                     >
-                      <Linkedin className="h-5 w-5" />
+                      <LinkedinIcon className="h-5 w-5" />
                     </a>
                   </div>
                 </div>
@@ -239,7 +240,7 @@ const Team = () => {
                     images.map((image, imageIndex) => (
                       <div
                         key={`row-${rowIndex}-set-${setIndex}-${imageIndex}`}
-                        className="flex-shrink-0"
+                        className="shrink-0"
                       >
                         <img
                           src={image}

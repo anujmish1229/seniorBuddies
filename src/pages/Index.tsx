@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import { Button } from "@/components/ui/button";
 import Layout from "@/components/Layout";
 import logo from "@/assets/logo.webp";
@@ -21,7 +21,7 @@ const Index = () => {
       {/* Hero Section */}
       <section className="min-h-[calc(100vh-5rem)] flex items-center relative overflow-hidden">
         {/* Background decoration */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-accent/5" />
+        <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-accent/5" />
         <div className="absolute top-20 right-0 w-96 h-96 bg-accent/10 rounded-full blur-3xl" />
         <div className="absolute bottom-0 left-0 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
         
@@ -34,7 +34,7 @@ const Index = () => {
               </div>
               
               <div className="space-y-4">
-                <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight text-balance">
+                <h1 className="font-heading font-extrabold text-4xl md:text-5xl lg:text-6xl text-foreground leading-tight md:leading-none text-balance">
                   Bridging the{" "}
                   <span className="text-primary">Intergenerational</span>{" "}
                   Gap
@@ -63,7 +63,7 @@ const Index = () => {
                     filter: `drop-shadow(30px 0 0 ${shadowColor})`,
                   }}
                 />
-                <div className="absolute bottom-0 left-0 right-0 h-1/6 bg-gradient-to-t from-background to-transparent rounded-b-3xl pointer-events-none" />
+                <div className="absolute bottom-0 left-0 right-0 h-1/6 bg-linear-to-t from-background to-transparent rounded-b-3xl pointer-events-none" />
               </div>
             </div>
           </div>
@@ -113,7 +113,7 @@ const Index = () => {
 
       {/* CTA Section */}
       <section className="py-24 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-primary to-primary/80" />
+        <div className="absolute inset-0 bg-linear-to-r from-primary to-primary/80" />
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-40 h-40 border-4 border-primary-foreground rounded-full" />
           <div className="absolute bottom-10 right-10 w-60 h-60 border-4 border-primary-foreground rounded-full" />

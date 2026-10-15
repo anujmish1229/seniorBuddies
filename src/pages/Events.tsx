@@ -3,7 +3,7 @@ import Layout from "@/components/Layout";
 import { Calendar, MapPin, Clock, Users, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Link } from "react-router-dom";
+import { Link } from "react-router";
 import eventsFallback from "@/data/events-fallback.json";
 
 interface EventbriteEvent {
@@ -317,7 +317,7 @@ const Events = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">Events</h1>

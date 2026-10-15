@@ -10,7 +10,7 @@ const Join = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">
@@ -119,7 +119,7 @@ const Join = () => {
                         id="name"
                         name="name"
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-hidden focus:ring-2 focus:ring-primary transition-all"
                         placeholder="Your full name"
                       />
                     </div>
@@ -133,7 +133,7 @@ const Join = () => {
                         id="email"
                         name="email"
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-hidden focus:ring-2 focus:ring-primary transition-all"
                         placeholder="your@email.com"
                       />
                     </div>
@@ -147,7 +147,7 @@ const Join = () => {
                         id="phone"
                         name="phone"
                         required
-                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                        className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-hidden focus:ring-2 focus:ring-primary transition-all"
                         placeholder="(905) 555-1234"
                       />
                     </div>
@@ -162,7 +162,7 @@ const Join = () => {
                           name="message"
                           required
                           rows={5}
-                          className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
+                          className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-hidden focus:ring-2 focus:ring-primary transition-all resize-none"
                           placeholder="What interests or hobbies do you have? Why are you interested in volunteering with Senior Buddies? What skills or experiences can you bring?"
                         />
                       </div>
@@ -175,7 +175,7 @@ const Join = () => {
                           id="message"
                           name="message"
                           rows={5}
-                          className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-none focus:ring-2 focus:ring-primary transition-all resize-none"
+                          className="w-full px-4 py-3 rounded-lg border border-input bg-background text-foreground font-body focus:outline-hidden focus:ring-2 focus:ring-primary transition-all resize-none"
                           placeholder="Tell us about your interests, hobbies, or anything else you'd like us to know (optional)"
                         />
                       </div>
