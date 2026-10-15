@@ -5,7 +5,7 @@ const About = () => {
   return (
     <Layout>
       {/* Hero */}
-      <section className="py-20 bg-gradient-to-br from-primary/5 via-transparent to-accent/5">
+      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
         <div className="container mx-auto px-4">
           <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
             <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">
@@ -104,7 +104,7 @@ const About = () => {
                   className="flex gap-4 p-6 bg-card rounded-xl shadow-soft animate-fade-in-up"
                   style={{ animationDelay: `${index * 0.1}s` }}
                 >
-                  <CheckCircle className="h-6 w-6 text-primary flex-shrink-0 mt-1" />
+                  <CheckCircle className="h-6 w-6 text-primary shrink-0 mt-1" />
                   <div>
                     <h3 className="font-heading font-semibold text-lg text-foreground mb-2">{item.title}</h3>
                     <p className="text-muted-foreground font-body">{item.description}</p>
