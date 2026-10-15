@@ -1,42 +1,28 @@
 import { useEffect, useState, useRef } from "react";
 import Layout from "@/components/Layout";
 import { Mail, Linkedin } from "lucide-react";
-import tanishkaImage from "@/assets/tanishka.png";
+import tanishkaImage from "@/assets/tanishka.webp";
 import anujImage from "@/assets/anuj.png";
-import harshImage from "@/assets/harsh.png";
+import harshImage from "@/assets/harsh.webp";
+import teamMembersData from "@/data/team-members.json";
 
 // Import all youth volunteer images
-const youthVolunteerImages = import.meta.glob("@/assets/teamMembers/*.jpeg", { eager: true, import: "default" }) as Record<string, string>;
+const youthVolunteerImages = import.meta.glob("@/assets/teamMembers/*.webp", { eager: true, import: "default" }) as Record<string, string>;
 const youthVolunteerImageArray = Object.values(youthVolunteerImages);
 
 const shadowColors = ['#ffd1d1', '#ffdd84', '#f9defd', '#dcf5cf', '#f5e1fa', '#d0f4f4', '#fff5ba'];
 
-const teamMembers = [
-  {
-    name: "Tanishka Sharma",
-    role: "Founder & Director",
-    bio: "I am a Grade 12 high school student in Durham Region and I founded Senior Buddies in 2023 to help reduce loneliness among both seniors and youth through intergenerational connection. I hope to pursue a future career in medicine, and in my spare time I love playing chess and figure skating.",
-    email: "tanishka@seniorbuddiesdurham.ca",
-    linkedin: "https://www.linkedin.com/in/tanishka-sharma-7a580b355/",
-    image: tanishkaImage,
-  },
-  {
-    name: "Anuj Mishra",
-    role: "Board Member",
-    bio: "Hey! I'm Anuj Mishra, I'm a 12th grade student at Pickering High School. I love robotics and making a difference in the community.",
-    email: "anuj@seniorbuddiesdurham.ca",
-    linkedin: "https://www.linkedin.com/in/anujmmishra/",
-    image: anujImage,
-  },
-  {
-    name: "Harsh Patel",
-    role: "Board Member",
-    bio: "Hi, my name is Harsh Patel. I'm 17 years old currently attending Pine Ridge and aspire to become an RN in the emergency room. I joined Senior Buddies to make a difference within the community.",
-    email: "harsh@seniorbuddiesdurham.ca",
-    linkedin: "https://www.linkedin.com/in/harsh-patel-b0b0b0b0b0/",
-    image: harshImage,
-  },
-];
+// Board member photos are bundled assets, so they're mapped in here by the "image" key from the JSON.
+const boardMemberImages: Record<string, string> = {
+  tanishka: tanishkaImage,
+  anuj: anujImage,
+  harsh: harshImage,
+};
+
+const teamMembers = teamMembersData.map((member) => ({
+  ...member,
+  image: boardMemberImages[member.image],
+}));
 
 // Shuffle array function
 const shuffleArray = <T,>(array: T[]): T[] => {
@@ -188,10 +174,20 @@ const Team = () => {
                     {member.bio}
                   </p>
                   <div className="flex gap-3 pt-2">
-                    <a href={`mailto:${member.email}`} className="text-muted-foreground hover:text-primary transition-colors">
+                    <a
+                      href={`mailto:${member.email}`}
+                      aria-label={`Email ${member.name}`}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
                       <Mail className="h-5 w-5" />
                     </a>
-                    <a href={member.linkedin} className="text-muted-foreground hover:text-primary transition-colors">
+                    <a
+                      href={member.linkedin}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${member.name}'s LinkedIn profile`}
+                      className="text-muted-foreground hover:text-primary transition-colors"
+                    >
                       <Linkedin className="h-5 w-5" />
                     </a>
                   </div>

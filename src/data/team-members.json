@@ -1,0 +1,26 @@
+[
+  {
+    "name": "Tanishka Sharma",
+    "role": "Founder & Director",
+    "bio": "I am a Grade 12 high school student in Durham Region and I founded Senior Buddies in 2023 to help reduce loneliness among both seniors and youth through intergenerational connection. I hope to pursue a future career in medicine, and in my spare time I love playing chess and figure skating.",
+    "email": "tanishka@seniorbuddiesdurham.ca",
+    "linkedin": "https://www.linkedin.com/in/tanishka-sharma-7a580b355/",
+    "image": "tanishka"
+  },
+  {
+    "name": "Anuj Mishra",
+    "role": "Board Member",
+    "bio": "Hey! I'm Anuj Mishra, I'm a 12th grade student at Pickering High School. I love robotics and making a difference in the community.",
+    "email": "anuj@seniorbuddiesdurham.ca",
+    "linkedin": "https://www.linkedin.com/in/anujmmishra/",
+    "image": "anuj"
+  },
+  {
+    "name": "Harsh Patel",
+    "role": "Board Member",
+    "bio": "Hi, my name is Harsh Patel. I'm 17 years old currently attending Pine Ridge and aspire to become an RN in the emergency room. I joined Senior Buddies to make a difference within the community.",
+    "email": "harsh@seniorbuddiesdurham.ca",
+    "linkedin": "https://www.linkedin.com/in/harsh-patel-b0b0b0b0b0/",
+    "image": "harsh"
+  }
+]

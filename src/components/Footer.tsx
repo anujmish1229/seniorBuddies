@@ -1,5 +1,5 @@
 import { Instagram, Facebook, ArrowUp } from "lucide-react";
-import titleImage from "@/assets/title.png";
+import titleImage from "@/assets/title.webp";
 
 const Footer = () => {
   const scrollToTop = () => {
