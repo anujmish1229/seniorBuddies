@@ -8,12 +8,12 @@ const navItems = [pages.home, pages.about, pages.team, pages.events, pages.conta
 
 // Page links and social links share one ruled-row style so they read as one block.
 const rowClass =
-  "group flex items-center justify-between border-b border-paper/25 py-2 font-display text-xl font-semibold hover:text-sun md:py-3 md:text-3xl";
+  "group flex items-center justify-between border-b border-paper/25 py-2 font-display text-xl font-semibold hover:text-sun md:py-3 md:text-3xl md:short:py-2";
 const headingClass = "mb-2 border-b border-paper/25 pb-3 font-body text-base font-bold text-shirt";
 
 const Footer = () => (
-  <footer id="site-footer" className="on-dark flex h-svh flex-col overflow-hidden bg-ink text-paper [@media(max-height:560px)]:h-auto">
-    <div className="container grid w-full gap-8 pt-12 md:gap-14 md:pt-24 lg:grid-cols-12 lg:gap-12">
+  <footer id="site-footer" className="on-dark flex min-h-svh flex-col bg-ink text-paper">
+    <div className="container grid w-full gap-8 pt-8 md:gap-14 md:pt-16 md:short:pt-[max(1.5rem,4svh)] lg:grid-cols-12 lg:gap-12">
       <p className="font-display text-4xl leading-[1.02] font-semibold md:text-7xl lg:col-span-6 lg:text-6xl xl:text-7xl">{slogan}</p>
 
       <div className="grid grid-cols-2 gap-6 sm:gap-10 lg:col-span-6 lg:col-start-7">
@@ -53,17 +53,23 @@ const Footer = () => (
       </div>
     </div>
 
-    {/* The full Senior Buddies wordmark, edge to edge, pinned to the bottom of the footer, which is exactly one screen tall. */}
-    <div className="mt-auto px-4 pt-8 pb-5 md:px-8 md:pt-16 md:pb-8">
-      <img src={wordmark} alt="Senior Buddies" width={2400} height={314} className="h-auto w-full" />
-      <p className="mt-3 text-right text-sm text-paper/70 md:mt-4 md:pr-2">
+    {/* The full Senior Buddies wordmark, edge to edge, pinned to the bottom of the footer. The footer is one screen tall; on shorter screens it tightens up to fit, and if it still can't, it grows rather than cutting anything off. */}
+    <div className="mt-auto px-4 pt-8 pb-3 md:px-8 md:pt-16 md:pb-4 md:short:pt-8">
+      <img
+        src={wordmark}
+        alt="Senior Buddies"
+        width={2400}
+        height={314}
+        className="h-auto w-full md:shorter:mx-auto md:shorter:h-[17svh] md:shorter:w-auto"
+      />
+    </div>
+
+    {/* Bottom line, on the same edges as the rest of the footer. */}
+    <div className="container flex w-full items-center justify-between gap-4 pb-5 text-sm text-paper/70 md:pb-6">
+      <p>© {new Date().getFullYear()} Senior Buddies</p>
+      <p>
         Site by{" "}
-        <a
-          href="https://anujmishra.dev"
-          target="_blank"
-          rel="noopener"
-          className="underline underline-offset-4 hover:text-sun"
-        >
+        <a href="https://anujmishra.dev" target="_blank" rel="noopener" className="underline underline-offset-4 hover:text-sun">
           Anuj Mishra<span className="sr-only"> (opens in a new tab)</span>
         </a>
       </p>

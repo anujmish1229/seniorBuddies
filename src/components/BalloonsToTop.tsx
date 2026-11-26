@@ -139,8 +139,8 @@ const BalloonsToTop = () => {
 
   return (
     // Drawn at full size and scaled down on narrow screens; the outer box reserves the scaled size.
-    <div className="h-[163px] w-[156px] sm:h-[250px] sm:w-[240px]">
-      <div className="origin-top-left scale-[0.65] sm:scale-100">
+    <div className="h-[163px] w-[156px] sm:h-[250px] sm:w-[240px] sm:short:h-[188px] sm:short:w-[180px]">
+      <div className="origin-top-left scale-[0.65] sm:scale-100 sm:short:scale-75">
       <button
         ref={ref}
         type="button"

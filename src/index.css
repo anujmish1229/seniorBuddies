@@ -8,6 +8,10 @@
   - paper: warm off-white, like the welcome banner
   shirt and sun are backgrounds only; they're too light for text on paper.
 */
+/* Shorter screens (laptops): used to fit the footer into one screen. */
+@custom-variant short (@media (max-height: 820px));
+@custom-variant shorter (@media (max-height: 680px));
+
 @theme {
   --color-paper: #fbf7ef;
   --color-paper-deep: #f2ebdc;
