@@ -56,6 +56,17 @@ const Footer = () => (
     {/* The full Senior Buddies wordmark, edge to edge, pinned to the bottom of the footer, which is exactly one screen tall. */}
     <div className="mt-auto px-4 pt-8 pb-5 md:px-8 md:pt-16 md:pb-8">
       <img src={wordmark} alt="Senior Buddies" width={2400} height={314} className="h-auto w-full" />
+      <p className="mt-3 text-right text-sm text-paper/70 md:mt-4 md:pr-2">
+        Site by{" "}
+        <a
+          href="https://anujmishra.dev"
+          target="_blank"
+          rel="noopener"
+          className="underline underline-offset-4 hover:text-sun"
+        >
+          Anuj Mishra<span className="sr-only"> (opens in a new tab)</span>
+        </a>
+      </p>
     </div>
   </footer>
 );
