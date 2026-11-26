@@ -5,7 +5,6 @@ Website for **Senior Buddies**, a youth-led nonprofit in Durham Region, Ontario,
 **Live site:** https://seniorbuddiesdurham.ca
 
 ![Senior Buddies home page](docs/screenshot.png)
-<!-- TODO: add a 1280×800 screenshot of the home page at docs/screenshot.png -->
 
 ## Who it's for
 
@@ -15,14 +14,14 @@ Website for **Senior Buddies**, a youth-led nonprofit in Durham Region, Ontario,
 
 ## My role
 
-I'm a board member of Senior Buddies, and I built and maintain the website: design, React front end, the Eventbrite integration via a Netlify Function, Netlify Forms for sign-ups, and deployment.
+I'm a board member of Senior Buddies, and I built and maintain the website: design, React front end, the events list, Netlify Forms for sign-ups, and deployment.
 
 ## Features
 
-- **Live events from Eventbrite.** A Netlify Function proxies the Eventbrite API, so the API key never reaches the browser. If the API is unavailable, the Events page falls back to bundled example events.
+- **Events list** kept in `src/data/events.ts`, filled in from posts on [our Instagram](https://www.instagram.com/seniorbuddiesdurham/), which is where every event is announced. Events dated today or later show under "Coming up"; the rest move to "Past events" on their own. Each links back to its post.
 - **Volunteer, senior and contact forms** handled by Netlify Forms (no backend), with honeypot spam protection.
 - **Team page** driven by `src/data/team-members.json`, with WebP photos.
-- Responsive layout, SEO and Open Graph meta tags, client-side routing.
+- Responsive layout, keyboard-accessible navigation and forms, reduced-motion support, SEO and Open Graph meta tags, client-side routing.
 
 ## Tech stack
 
@@ -30,10 +29,9 @@ I'm a board member of Senior Buddies, and I built and maintain the website: desi
 | ---------- | ------------------------------------------------------- |
 | Framework  | React 19 + TypeScript                                   |
 | Build tool | Vite 8                                                  |
-| Routing    | React Router 7                                          |
+| Routing    | React Router 8                                          |
 | Styling    | Tailwind CSS 4 + shadcn/ui (Radix) primitives           |
-| Data       | TanStack Query                                          |
-| Serverless | Netlify Functions (Eventbrite proxy), Netlify Forms     |
+| Forms      | Netlify Forms                                           |
 | Hosting    | Netlify (auto-deploys from `main`)                      |
 | CI         | GitHub Actions: lint, typecheck, build                  |
 
@@ -44,9 +42,6 @@ Browser (React SPA)
    │
    ├── static assets ─────────────► Netlify CDN (dist/)
    │
-   ├── GET /.netlify/functions/eventbrite-events?range=upcoming|past
-   │        └─► Netlify Function ──► Eventbrite API (EVENTBRITE_API_KEY, server-side only)
-   │
    └── POST form submissions ─────► Netlify Forms
                                      (forms declared as hidden <form>s in index.html
                                       so Netlify detects them at build time)
@@ -55,14 +50,13 @@ Browser (React SPA)
 ```
 index.html                 HTML shell, meta tags, hidden Netlify form definitions
 netlify.toml               Build command, SPA redirect, `netlify dev` settings
-netlify/functions/         eventbrite-events.js (see its README)
 public/                    _redirects, favicon, robots.txt
 src/
   App.tsx                  Route table
   pages/                   Index, About, Team, Events, Contact, Join, NotFound
-  components/              Layout, Navbar, Footer, icons/, ui/ (shadcn)
+  components/              Layout, Navbar, Footer, PageHeader, PhotoStrip, ui/ (shadcn button)
   hooks/use-netlify-form.ts  Submits forms to Netlify
-  data/                    team-members.json, events-fallback.json
+  data/                    events.ts, team-members.json, photos.ts (alt text), site.ts (page names, links)
   assets/                  WebP images
 ```
 
@@ -74,13 +68,7 @@ Requires Node.js 20.19+ or 22.12+ (see `.nvmrc`) and npm.
 git clone https://github.com/anujmish1229/seniorBuddies.git
 cd seniorBuddies
 npm install
-npm run dev              # http://localhost:8080 (frontend only; events use fallback data)
-```
-
-To run the Eventbrite function locally as well, use the Netlify CLI:
-
-```bash
-npx netlify-cli dev      # serves the site and /.netlify/functions/*
+npm run dev              # http://localhost:8080
 ```
 
 | Script              | What it does                       |
@@ -91,12 +79,10 @@ npx netlify-cli dev      # serves the site and /.netlify/functions/*
 | `npm run lint`      | ESLint                             |
 | `npm run typecheck` | TypeScript type check              |
 
+## Adding an event
+
+Open `src/data/events.ts`, copy an entry to the top of the list and fill it in from the Instagram post: title, date (`YYYY-MM-DD`), time, place, a one-line summary and the post link. If the post doesn't give the event date, use the day it was posted and set `postedOnly: true`. Add `register` if there's a sign-up link.
+
 ## Environment variables
 
-Set these in the Netlify dashboard (Site configuration → Environment variables), or in a local `.env` for `netlify dev`:
-
-| Name                 | Used by                     | Purpose                     |
-| -------------------- | --------------------------- | --------------------------- |
-| `EVENTBRITE_API_KEY` | `netlify/functions` (server) | Eventbrite private API token |
-
-The frontend uses no environment variables.
+None. The site has no server code; forms go to Netlify Forms.

@@ -1,368 +1,136 @@
-import { useEffect, useState } from "react";
-import Layout from "@/components/Layout";
-import { Calendar, MapPin, Clock, Users, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useState } from "react";
 import { Link } from "react-router";
-import eventsFallback from "@/data/events-fallback.json";
+import Layout from "@/components/Layout";
+import PageHeader from "@/components/PageHeader";
+import Segmented from "@/components/Segmented";
+import { Button } from "@/components/ui/button";
+import { events, type SiteEvent } from "@/data/events";
+import { instagramUrl, pages } from "@/data/site";
 
-interface EventbriteEvent {
-  id: string;
-  name: {
-    text: string;
-  };
-  description: {
-    text: string;
-    html?: string;
-  };
-  start: {
-    utc: string;
-    local: string;
-    timezone: string;
-  };
-  end: {
-    utc: string;
-    local: string;
-  };
-  venue?: {
-    name?: string;
-    address?: {
-      address_1?: string;
-      city?: string;
-      region?: string;
-      postal_code?: string;
-      country?: string;
-    };
-  };
-  url: string;
-  capacity?: number;
-  tickets_available?: {
-    total?: number;
-  };
-}
+const linkClass = "font-bold text-link underline decoration-2 underline-offset-4 hover:text-ink";
 
-interface FormattedEvent {
-  id: string;
-  title: string;
-  date: string;
-  time: string;
-  location: string;
-  description: string;
-  spots: number;
-  color: string;
-  url: string;
-}
-
-type EventRange = "upcoming" | "past";
-
-// Color palette for event cards
-const eventColors = ["#ff6b6b", "#4ecdc4", "#45b7d1", "#f9ca24", "#f0932b", "#eb4d4b", "#6c5ce7", "#a29bfe"];
-
-function formatEvents(rawEvents: EventbriteEvent[]): FormattedEvent[] {
-  return rawEvents.map((event, index) => {
-    const startDate = new Date(event.start.utc);
-    const endDate = new Date(event.end.utc);
-
-    const dateStr = startDate.toLocaleDateString("en-US", {
-      weekday: "long",
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    });
-
-    const startTime = startDate.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-    const endTime = endDate.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      minute: "2-digit",
-      hour12: true,
-    });
-    const timeStr = `${startTime} - ${endTime}`;
-
-    let location = "Location TBD";
-    if (event.venue) {
-      const parts = [];
-      if (event.venue.name) parts.push(event.venue.name);
-      if (event.venue.address) {
-        if (event.venue.address.address_1) parts.push(event.venue.address.address_1);
-        if (event.venue.address.city) parts.push(event.venue.address.city);
-        if (event.venue.address.region) parts.push(event.venue.address.region);
-      }
-      location = parts.length > 0 ? parts.join(", ") : location;
-    }
-
-    const description =
-      event.description?.text || event.description?.html?.replace(/<[^>]*>/g, "") || "No description available.";
-    const truncatedDescription = description.length > 200 ? description.substring(0, 200) + "..." : description;
-
-    const capacity = event.capacity || event.tickets_available?.total || 0;
-
-    return {
-      id: event.id,
-      title: event.name.text,
-      date: dateStr,
-      time: timeStr,
-      location,
-      description: truncatedDescription,
-      spots: capacity,
-      color: eventColors[index % eventColors.length],
-      url: event.url,
-    };
-  });
-}
-
-const EMPTY_MESSAGES: Record<EventRange, { title: string; body: string }> = {
-  upcoming: {
-    title: "No Events Scheduled",
-    body: "Sorry, there are no upcoming events scheduled right now. Check back later",
-  },
-  past: {
-    title: "No Past Events",
-    body: "We don't have any past events on record yet",
-  },
+// Dates are calendar days, so parse them as local dates, not UTC midnight.
+const parseDay = (iso: string) => {
+  const [y, m, d] = iso.split("-").map(Number);
+  return new Date(y, m - 1, d);
 };
 
-const Events = () => {
-  const [range, setRange] = useState<EventRange>("upcoming");
-  const [eventsByRange, setEventsByRange] = useState<Record<EventRange, FormattedEvent[] | null>>({
-    upcoming: null,
-    past: null,
-  });
-  const [loadingRange, setLoadingRange] = useState<EventRange | null>("upcoming");
-  const [errorByRange, setErrorByRange] = useState<Record<EventRange, string | null>>({
-    upcoming: null,
-    past: null,
-  });
-  const [usingFallback, setUsingFallback] = useState<Record<EventRange, boolean>>({
-    upcoming: false,
-    past: false,
-  });
+const today = new Date();
+today.setHours(0, 0, 0, 0);
 
-  useEffect(() => {
-    document.title = "Senior Buddies - Events";
-  }, []);
+const sorted = [...events].sort((a, b) => b.date.localeCompare(a.date));
+const upcoming = sorted.filter((e) => parseDay(e.date) >= today).reverse();
+const past = sorted.filter((e) => parseDay(e.date) < today);
 
-  useEffect(() => {
-    // Fetch lazily, once per tab, and cache the result so switching tabs doesn't refetch.
-    if (eventsByRange[range] !== null) return;
-
-    let cancelled = false;
-
-    const fetchEvents = async () => {
-      setLoadingRange(range);
-      setErrorByRange((prev) => ({ ...prev, [range]: null }));
-
-      try {
-        const response = await fetch(`/.netlify/functions/eventbrite-events?range=${range}`);
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch events");
-        }
-
-        const data = await response.json();
-
-        if (data.error) {
-          throw new Error(data.error);
-        }
-
-        const formatted = formatEvents(data.events || []);
-        if (!cancelled) {
-          setEventsByRange((prev) => ({ ...prev, [range]: formatted }));
-          setUsingFallback((prev) => ({ ...prev, [range]: false }));
-        }
-      } catch (err) {
-        console.error(`Error fetching ${range} events, using fallback data:`, err);
-        try {
-          const fallback = formatEvents(eventsFallback[range] as EventbriteEvent[]);
-          if (!cancelled) {
-            setEventsByRange((prev) => ({ ...prev, [range]: fallback }));
-            setUsingFallback((prev) => ({ ...prev, [range]: true }));
-          }
-        } catch (fallbackErr) {
-          console.error(`Error loading fallback ${range} events:`, fallbackErr);
-          if (!cancelled) {
-            setErrorByRange((prev) => ({
-              ...prev,
-              [range]: err instanceof Error ? err.message : "Failed to load events",
-            }));
-          }
-        }
-      } finally {
-        if (!cancelled) setLoadingRange(null);
-      }
-    };
-
-    fetchEvents();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [range, eventsByRange]);
-
-  const renderEventList = (tabRange: EventRange) => {
-    const events = eventsByRange[tabRange];
-    const error = errorByRange[tabRange];
-    const isLoading = loadingRange === tabRange;
-
-    if (isLoading || events === null) {
-      return (
-        <div className="bg-card rounded-2xl p-12 shadow-card text-center animate-fade-in-up">
-          <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-6 opacity-50 animate-pulse" />
-          <h2 className="font-heading font-bold text-2xl text-foreground mb-4">Loading Events...</h2>
-        </div>
-      );
-    }
-
-    if (error) {
-      return (
-        <div className="bg-card rounded-2xl p-12 shadow-card text-center animate-fade-in-up">
-          <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-6 opacity-50" />
-          <h2 className="font-heading font-bold text-2xl text-foreground mb-4">Unable to Load Events</h2>
-          <p className="text-muted-foreground font-body leading-relaxed mb-6">
-            {error}. Please try again later or{" "}
-            <Link to="/contact" className="text-primary hover:underline font-medium">
-              contact us
-            </Link>{" "}
-            if the problem persists.
-          </p>
-        </div>
-      );
-    }
-
-    if (events.length === 0) {
-      const { title, body } = EMPTY_MESSAGES[tabRange];
-      return (
-        <div className="bg-card rounded-2xl p-12 shadow-card text-center animate-fade-in-up">
-          <Calendar className="h-16 w-16 text-muted-foreground mx-auto mb-6 opacity-50" />
-          <h2 className="font-heading font-bold text-2xl text-foreground mb-4">{title}</h2>
-          <p className="text-muted-foreground font-body leading-relaxed mb-6">
-            {body} or{" "}
-            <Link to="/contact" className="text-primary hover:underline font-medium">
-              contact us
-            </Link>{" "}
-            if you think this is a mistake.
-          </p>
-        </div>
-      );
-    }
-
-    return (
-      <div className="space-y-6">
-        {usingFallback[tabRange] && (
-          <div className="bg-accent/10 border border-accent/20 rounded-xl p-4 text-sm text-muted-foreground font-body">
-            We're having trouble loading live event data right now, so example events are shown below.{" "}
-            <Link to="/contact" className="text-primary hover:underline font-medium">
-              Contact us
-            </Link>{" "}
-            for the current schedule.
-          </div>
-        )}
-        {events.map((event, index) => (
-          <div
-            key={event.id}
-            className="bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 animate-fade-in-up"
-            style={{ animationDelay: `${index * 0.1}s` }}
-          >
-            <div className="flex flex-col md:flex-row">
-              <div className="w-full md:w-2 md:min-h-full" style={{ backgroundColor: event.color }} />
-
-              <div className="flex-1 p-6 md:p-8">
-                <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
-                  <div className="space-y-3">
-                    <h3 className="font-heading font-bold text-xl text-foreground">{event.title}</h3>
-
-                    <div className="flex flex-wrap gap-4 text-sm text-muted-foreground font-body">
-                      <span className="flex items-center gap-1">
-                        <Calendar className="h-4 w-4" />
-                        {event.date}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <Clock className="h-4 w-4" />
-                        {event.time}
-                      </span>
-                      <span className="flex items-center gap-1">
-                        <MapPin className="h-4 w-4" />
-                        {event.location}
-                      </span>
-                    </div>
-
-                    <p className="text-muted-foreground font-body leading-relaxed">{event.description}</p>
-
-                    {tabRange === "upcoming" && event.spots > 0 && (
-                      <div className="flex items-center gap-2 text-sm">
-                        <Users className="h-4 w-4 text-primary" />
-                        <span className="text-primary font-medium font-body">{event.spots} spots available</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <Button asChild variant={tabRange === "upcoming" ? "hero" : "outline"} className="shrink-0">
-                    <a href={event.url} target="_blank" rel="noopener noreferrer">
-                      {tabRange === "upcoming" ? "Register" : "View Event"}
-                      <ArrowRight className="h-4 w-4" />
-                    </a>
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    );
-  };
+const EventItem = ({ event }: { event: SiteEvent }) => {
+  const day = parseDay(event.date);
+  const fmt = (o: Intl.DateTimeFormatOptions) => day.toLocaleDateString("en-CA", o);
+  const fullDate = fmt({ weekday: "long", month: "long", day: "numeric", year: "numeric" });
 
   return (
-    <Layout>
-      {/* Hero */}
-      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-            <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">Events</h1>
-            <p className="text-lg text-muted-foreground font-body leading-relaxed">
-              Join us for activities that bring generations together in Durham Region.
-            </p>
-          </div>
-        </div>
-      </section>
+    <li className="grid gap-4 border-t border-rule py-10 md:grid-cols-[9rem_1fr] md:gap-10 lg:grid-cols-[9rem_1fr_auto]">
+      <p className="flex items-baseline gap-3 font-display leading-none md:block" aria-hidden>
+        <span className="block text-2xl font-semibold">{fmt({ month: "short" })}</span>
+        <span className="block text-5xl font-bold md:text-7xl">{fmt({ day: "numeric" })}</span>
+      </p>
+      <div>
+        <h3 className="text-3xl md:text-4xl">{event.title}</h3>
+        <p className="mt-3 font-bold">
+          {event.postedOnly ? `Posted ${fmt({ month: "long", day: "numeric", year: "numeric" })}` : fullDate}
+          {event.time && <span className="font-normal text-ink-soft">, {event.time}</span>}
+        </p>
+        <p className="text-ink-soft">{event.place}</p>
+        <p className="mt-4 max-w-2xl">{event.summary}</p>
+      </div>
+      <div className="flex flex-wrap items-start gap-x-6 gap-y-3 lg:flex-col lg:items-end lg:pt-2">
+        {event.register && (
+          <Button asChild>
+            <a href={event.register} target="_blank" rel="noopener noreferrer">
+              Register<span className="sr-only"> for {event.title} (opens in a new tab)</span>
+            </a>
+          </Button>
+        )}
+        <a href={event.instagram} target="_blank" rel="noopener noreferrer" className={linkClass}>
+          See the post<span className="sr-only"> about {event.title} on Instagram (opens in a new tab)</span>
+        </a>
+      </div>
+    </li>
+  );
+};
 
-      {/* Events List */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="max-w-4xl mx-auto">
-            <Tabs value={range} onValueChange={(value) => setRange(value as EventRange)}>
-              <TabsList className="mb-8">
-                <TabsTrigger value="upcoming">Upcoming Events</TabsTrigger>
-                <TabsTrigger value="past">Past Events</TabsTrigger>
-              </TabsList>
-              <TabsContent value="upcoming">{renderEventList("upcoming")}</TabsContent>
-              <TabsContent value="past">{renderEventList("past")}</TabsContent>
-            </Tabs>
-          </div>
-        </div>
-      </section>
+const ranges = [
+  { value: "upcoming", label: "Coming up" },
+  { value: "past", label: "Past" },
+] as const;
 
-      {/* Host Event CTA */}
-      <section className="py-20 bg-secondary/50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="font-heading font-bold text-3xl text-foreground mb-4">Want to Host an Event?</h2>
-            <p className="text-muted-foreground font-body mb-8 leading-relaxed">
-              Have a great idea for bringing generations together? We'd love to hear from you and help make it
-              happen.
-            </p>
-            <Button asChild variant="hero" size="xl">
-              <Link to="/contact">
-                Contact Us
-                <ArrowRight className="h-5 w-5" />
-              </Link>
-            </Button>
-          </div>
+type Range = (typeof ranges)[number]["value"];
+
+const Events = () => {
+  const [range, setRange] = useState<Range>("upcoming");
+  const list = range === "upcoming" ? upcoming : past;
+
+  return (
+  <Layout title="Events">
+    <PageHeader title="Events" tone="sun">
+      <p>Join us for activities that bring generations together in Durham Region.</p>
+    </PageHeader>
+
+    <section aria-labelledby="events-heading" className="container pt-14 pb-20 md:pt-16 md:pb-28">
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        <h2 id="events-heading" className="text-4xl md:text-5xl">
+          {range === "upcoming" ? "Coming up" : "Past events"}
+        </h2>
+        <Segmented<Range>
+          name="range"
+          legend="Show"
+          legendClassName="sr-only"
+          options={ranges}
+          value={range}
+          onChange={setRange}
+        />
+      </div>
+
+      <div aria-live="polite">
+        {list.length > 0 ? (
+          <ol className="mt-8">
+            {list.map((e) => (
+              <EventItem key={e.title + e.date} event={e} />
+            ))}
+          </ol>
+        ) : (
+          <p className="mt-8 max-w-2xl border-t border-rule pt-8 text-xl text-ink-soft">
+            {range === "upcoming" ? (
+              <>
+                Nothing is scheduled right now. New events are announced on{" "}
+                <a href={instagramUrl} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  our Instagram<span className="sr-only"> (opens in a new tab)</span>
+                </a>{" "}
+                first.
+              </>
+            ) : (
+              "No past events yet."
+            )}
+          </p>
+        )}
+      </div>
+    </section>
+
+    <section className="bg-shirt">
+      <div className="container grid gap-8 py-16 md:py-20 lg:grid-cols-12 lg:items-end">
+        <div className="lg:col-span-8">
+          <h2 className="text-5xl md:text-6xl">Want to host an event?</h2>
+          <p className="mt-5 max-w-2xl text-xl">
+            Have an idea for bringing generations together? We'd love to hear from you and help make it happen.
+          </p>
         </div>
-      </section>
-    </Layout>
+        <div className="lg:col-span-4 lg:text-right">
+          <Button asChild>
+            <Link to={pages.contact.path}>Contact us</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  </Layout>
   );
 };
 

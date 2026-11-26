@@ -1,47 +1,29 @@
-import { useEffect } from "react";
 import { Link } from "react-router";
-import { Home, ArrowLeft } from "lucide-react";
+import Layout from "@/components/Layout";
 import { Button } from "@/components/ui/button";
+import { pages } from "@/data/site";
 
-const NotFound = () => {
-  useEffect(() => {
-    document.title = "Senior Buddies - Not Found";
-  }, []);
-
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-background relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 bg-linear-to-br from-primary/5 via-transparent to-accent/5" />
-      <div className="absolute top-20 right-20 w-72 h-72 bg-accent/10 rounded-full blur-3xl" />
-      <div className="absolute bottom-20 left-20 w-60 h-60 bg-primary/10 rounded-full blur-3xl" />
-      
-      <div className="relative text-center px-4">
-        <div className="font-heading font-extrabold text-8xl md:text-9xl text-primary/20 mb-4">
-          404
-        </div>
-        <h1 className="font-heading font-bold text-3xl md:text-4xl text-foreground mb-4">
-          Page Not Found
-        </h1>
-        <p className="text-muted-foreground font-body text-lg mb-8 max-w-md mx-auto">
-          Oops! It looks like this page has wandered off. Let's get you back to our community.
+const NotFound = () => (
+  <Layout title="Page not found">
+    <section className="container grid gap-8 py-20 md:py-32 lg:grid-cols-12">
+      <p className="font-display text-8xl font-bold text-ink-soft md:text-9xl lg:col-span-4" aria-hidden>
+        404
+      </p>
+      <div className="lg:col-span-7 lg:col-start-6">
+        <h1 className="text-5xl md:text-7xl">We can't find that page</h1>
+        <p className="mt-6 max-w-xl text-xl text-ink-soft">
+          The link may be out of date, or the address may have a typo. If you were looking for something specific,{" "}
+          <Link to={pages.contact.path} className="font-bold text-link underline decoration-2 underline-offset-4 hover:text-ink">
+            contact us
+          </Link>
+          .
         </p>
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Button asChild variant="hero" size="lg">
-            <Link to="/">
-              <Home className="h-5 w-5" />
-              Go Home
-            </Link>
-          </Button>
-          <Button asChild variant="heroOutline" size="lg">
-            <Link to="/contact">
-              <ArrowLeft className="h-5 w-5" />
-              Contact Us
-            </Link>
-          </Button>
-        </div>
+        <Button asChild className="mt-10">
+          <Link to={pages.home.path}>Go to the home page</Link>
+        </Button>
       </div>
-    </div>
-  );
-};
+    </section>
+  </Layout>
+);
 
 export default NotFound;

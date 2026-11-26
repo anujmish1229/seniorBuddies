@@ -1,17 +1,14 @@
-import { useEffect, useState, useRef } from "react";
+import { Link } from "react-router";
 import Layout from "@/components/Layout";
-import { Mail } from "lucide-react";
-import LinkedinIcon from "@/components/icons/LinkedinIcon";
+import PageHeader from "@/components/PageHeader";
+import PhotoStrip from "@/components/PhotoStrip";
+import { Button } from "@/components/ui/button";
+import { volunteerPhotos } from "@/data/photos";
+import { pages } from "@/data/site";
 import tanishkaImage from "@/assets/tanishka.webp";
-import anujImage from "@/assets/anuj.png";
+import anujImage from "@/assets/anuj.webp";
 import harshImage from "@/assets/harsh.webp";
 import teamMembersData from "@/data/team-members.json";
-
-// Import all youth volunteer images
-const youthVolunteerImages = import.meta.glob("@/assets/teamMembers/*.webp", { eager: true, import: "default" }) as Record<string, string>;
-const youthVolunteerImageArray = Object.values(youthVolunteerImages);
-
-const shadowColors = ['#ffd1d1', '#ffdd84', '#f9defd', '#dcf5cf', '#f5e1fa', '#d0f4f4', '#fff5ba'];
 
 // Board member photos are bundled assets, so they're mapped in here by the "image" key from the JSON.
 const boardMemberImages: Record<string, string> = {
@@ -23,261 +20,97 @@ const boardMemberImages: Record<string, string> = {
 const teamMembers = teamMembersData.map((member) => ({
   ...member,
   image: boardMemberImages[member.image],
+  firstName: member.name.split(" ")[0],
+  lastName: member.name.split(" ").slice(1).join(" "),
 }));
 
-// Shuffle array function
-const shuffleArray = <T,>(array: T[]): T[] => {
-  const shuffled = [...array];
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-  }
-  return shuffled;
-};
+const discColours = ["bg-sun", "bg-shirt", "bg-blush"];
+const highlightColours = ["bg-sun/60", "bg-shirt/60", "bg-blush"];
 
-const Team = () => {
-  const [memberColors, setMemberColors] = useState<string[]>([]);
-  const [rowImages] = useState(() => {
-    // Each row gets all images, but in different random orders
-    return [
-      shuffleArray(youthVolunteerImageArray),
-      shuffleArray(youthVolunteerImageArray),
-      shuffleArray(youthVolunteerImageArray),
-    ];
-  });
-  const row1Ref = useRef<HTMLDivElement>(null);
-  const row2Ref = useRef<HTMLDivElement>(null);
-  const row3Ref = useRef<HTMLDivElement>(null);
+const linkClass = "font-bold text-link underline decoration-2 underline-offset-4 hover:text-ink";
 
-  useEffect(() => {
-    document.title = "Senior Buddies - Team";
-    // Randomly assign colors to each team member
-    const colors = teamMembers.map(() => {
-      return shadowColors[Math.floor(Math.random() * shadowColors.length)];
-    });
-    setMemberColors(colors);
-  }, []);
+const Team = () => (
+  <Layout title="Our team">
+    <PageHeader title="Our team" tone="blush">
+      <p>The board and youth volunteers working to bring generations together in Durham Region.</p>
+    </PageHeader>
 
-  // Infinite scroll for each row at different speeds
-  useEffect(() => {
-    const scrollSpeeds = [0.7, 0.5, 0.9]; // Different speeds for each row (pixels per frame)
-    const refs = [row1Ref, row2Ref, row3Ref];
-    const animationFrameIds: (number | null)[] = [null, null, null];
-
-    refs.forEach((ref, index) => {
-      const container = ref.current;
-      if (!container) return;
-
-      const content = container.children[0] as HTMLElement;
-      if (!content) return;
-
-      // Wait for images to load and layout to calculate width
-      const initScroll = () => {
-        // Wait for all images in the row to load
-        const images = content.querySelectorAll('img');
-        let loadedCount = 0;
-        
-        const checkAllLoaded = () => {
-          loadedCount++;
-          if (loadedCount < images.length) return;
-          
-          // Small delay to ensure layout is calculated
-          setTimeout(() => {
-            // Force a reflow to get accurate measurements
-            void content.offsetWidth;
-            const contentWidth = content.scrollWidth;
-            const singleSetWidth = contentWidth / 2; // We duplicate content, so half is one set
-            
-            let translateX = 0;
-
-            const animate = () => {
-              translateX -= scrollSpeeds[index];
-              
-              // Reset when scrolled past one set - add the width back to create seamless loop
-              if (translateX <= -singleSetWidth) {
-                translateX += singleSetWidth;
-              }
-              
-              content.style.transform = `translateX(${translateX}px)`;
-              animationFrameIds[index] = requestAnimationFrame(animate);
-            };
-
-            animationFrameIds[index] = requestAnimationFrame(animate);
-          }, 50);
-        };
-
-        if (images.length === 0) {
-          // No images, start immediately
-          checkAllLoaded();
-        } else {
-          images.forEach((img) => {
-            if (img.complete) {
-              checkAllLoaded();
-            } else {
-              img.addEventListener('load', checkAllLoaded, { once: true });
-              img.addEventListener('error', checkAllLoaded, { once: true });
-            }
-          });
-        }
-      };
-
-      // Wait a bit for DOM to be ready
-      setTimeout(initScroll, 100);
-    });
-
-    return () => {
-      animationFrameIds.forEach(id => {
-        if (id !== null) cancelAnimationFrame(id);
-      });
-    };
-  }, [rowImages]);
-  return (
-    <Layout>
-      {/* Hero */}
-      <section className="py-20 bg-linear-to-br from-primary/5 via-transparent to-accent/5">
-        <div className="container mx-auto px-4">
-          <div className="max-w-3xl mx-auto text-center animate-fade-in-up">
-            <h1 className="font-heading font-extrabold text-4xl md:text-5xl text-foreground mb-6">
-              Meet Our Team
-            </h1>
-            <p className="text-lg text-muted-foreground font-body leading-relaxed">
-              Dedicated individuals working to bring generations together in Durham Region.
+    {/* Board */}
+    <section aria-labelledby="board" className="container py-20 md:py-28">
+      <h2 id="board" className="text-center text-5xl md:text-6xl">
+        Board
+      </h2>
+      <ul className="mt-14 grid gap-16 md:grid-cols-3 md:gap-10 lg:gap-14">
+        {teamMembers.map((member, i) => (
+          <li key={member.name} className="flex flex-col items-center text-center">
+            {/* A flat disc in one of the logo colours sits behind each portrait. It's translated, so it doesn't affect centring. */}
+            <div className="relative mb-8 size-56 md:size-48 lg:size-60">
+              <span className={`absolute inset-0 translate-x-4 translate-y-4 rounded-full ${discColours[i % discColours.length]}`} aria-hidden />
+              <img
+                src={member.image}
+                alt={`Portrait of ${member.name}`}
+                width={400}
+                height={400}
+                loading="lazy"
+                className="relative size-full rounded-full border-4 border-paper object-cover"
+              />
+            </div>
+            {/* First and last name on their own lines, so every name takes two lines at every width. */}
+            <h3 className="text-4xl lg:text-5xl">
+              <span className="block">{member.firstName}</span>
+              <span className="block">{member.lastName}</span>
+            </h3>
+            <p className="mt-2 text-lg font-bold">
+              <span className={`box-decoration-clone px-1 ${highlightColours[i % highlightColours.length]}`}>{member.role}</span>
             </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Team Grid */}
-      <section className="py-20">
-        <div className="container mx-auto px-4">
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {teamMembers.map((member, index) => (
-              <div
-                key={member.name}
-                className="bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-elevated transition-all duration-300 hover:-translate-y-1 animate-fade-in-up"
-                style={{ animationDelay: `${index * 0.1}s` }}
-              >
-                <div 
-                  className="h-48 flex items-center justify-center"
-                  style={{ backgroundColor: memberColors[index] || shadowColors[0] }}
-                >
-                  <div className="w-32 h-32 bg-card rounded-full flex items-center justify-center shadow-soft">
-                    <img src={member.image} alt={member.name} className="w-full h-full object-cover rounded-full" />
-                  </div>
-                </div>
-                
-                <div className="p-6 space-y-3">
-                  <div>
-                    <h3 className="font-heading font-bold text-xl text-foreground">{member.name}</h3>
-                    <p className="text-primary font-body font-medium">{member.role}</p>
-                  </div>
-                  <p className="text-muted-foreground font-body text-sm leading-relaxed">
-                    {member.bio}
-                  </p>
-                  <div className="flex gap-3 pt-2">
-                    <a
-                      href={`mailto:${member.email}`}
-                      aria-label={`Email ${member.name}`}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <Mail className="h-5 w-5" />
-                    </a>
-                    <a
-                      href={member.linkedin}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${member.name}'s LinkedIn profile`}
-                      className="text-muted-foreground hover:text-primary transition-colors"
-                    >
-                      <LinkedinIcon className="h-5 w-5" />
-                    </a>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Youth Volunteers Gallery */}
-      <section className="py-20 bg-background">
-        <div className="container mx-auto px-4 mb-12">
-          <div className="max-w-3xl mx-auto text-center">
-            <h2 className="font-heading font-bold text-3xl md:text-4xl text-foreground mb-4">
-              Our Youth Volunteers
-            </h2>
-            <p className="text-muted-foreground font-body text-lg leading-relaxed">
-              Meet the amazing young people making a difference in our community.
+            <p className="mt-5 max-w-sm text-ink-soft">{member.bio}</p>
+            <p className="mt-6 flex flex-wrap justify-center gap-x-6 gap-y-2">
+              <a href={`mailto:${member.email}`} className={linkClass}>
+                Email {member.firstName}
+              </a>
+              {member.linkedin && (
+                <a href={member.linkedin} target="_blank" rel="noopener noreferrer" className={linkClass}>
+                  LinkedIn<span className="sr-only"> profile for {member.name} (opens in a new tab)</span>
+                </a>
+              )}
             </p>
-          </div>
-        </div>
+          </li>
+        ))}
+      </ul>
+    </section>
 
-        {/* Three rows of scrolling images */}
-        <div className="space-y-4 overflow-hidden">
-          {[0, 1, 2].map((rowIndex) => {
-            const rowRef = rowIndex === 0 ? row1Ref : rowIndex === 1 ? row2Ref : row3Ref;
-            const images = rowImages[rowIndex];
-            
-            return (
-              <div
-                key={rowIndex}
-                ref={rowRef}
-                className="overflow-x-hidden"
-                style={{
-                  scrollbarWidth: 'none',
-                  msOverflowStyle: 'none',
-                }}
-              >
-                <div 
-                  className="flex gap-2"
-                  style={{ 
-                    width: 'max-content',
-                    willChange: 'transform',
-                  }}
-                >
-                  {/* Render 2 sets for seamless loop */}
-                  {[1, 2].map((setIndex) => (
-                    images.map((image, imageIndex) => (
-                      <div
-                        key={`row-${rowIndex}-set-${setIndex}-${imageIndex}`}
-                        className="shrink-0"
-                      >
-                        <img
-                          src={image}
-                          alt={`Youth volunteer ${imageIndex + 1}`}
-                          className="h-48 object-contain rounded-sm"
-                          style={{ width: 'auto', display: 'block' }}
-                        />
-                      </div>
-                    ))
-                  ))}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-      </section>
+    {/* Youth volunteers */}
+    <section aria-labelledby="volunteers" className="on-dark bg-ink pt-20 pb-16 text-paper md:pt-28 md:pb-20">
+      <div className="container">
+        <h2 id="volunteers" className="text-5xl md:text-6xl">
+          Our youth volunteers
+        </h2>
+        <p className="mt-5 max-w-2xl text-xl text-paper/85">
+          Some of the young people who volunteer with Senior Buddies.
+        </p>
+      </div>
+      <div className="mt-10">
+        <PhotoStrip photos={volunteerPhotos} label="Photos of youth volunteers" />
+      </div>
+    </section>
 
-      {/* Join Team CTA */}
-      <section className="py-20 bg-secondary/50">
-        <div className="container mx-auto px-4">
-          <div className="max-w-2xl mx-auto text-center">
-            <h2 className="font-heading font-bold text-3xl text-foreground mb-4">Join Our Team</h2>
-            <p className="text-muted-foreground font-body mb-8 leading-relaxed">
-              We're always looking for passionate individuals to join our mission. Check out current opportunities or reach out to learn more.
-            </p>
-            <a 
-              href="/contact" 
-              className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-8 py-4 rounded-xl font-semibold hover:bg-primary/90 transition-all shadow-soft hover:shadow-card font-body"
-            >
-              <Mail className="h-5 w-5" />
-              Get in Touch
-            </a>
-          </div>
+    {/* Volunteer call */}
+    <section className="bg-shirt">
+      <div className="container grid gap-8 py-16 md:py-20 lg:grid-cols-12 lg:items-end">
+        <div className="lg:col-span-8">
+          <h2 className="text-5xl md:text-6xl">Want to volunteer?</h2>
+          <p className="mt-5 max-w-2xl text-xl">
+            Fill out the volunteer form and we'll be in touch to discuss how you can get involved.
+          </p>
         </div>
-      </section>
-    </Layout>
-  );
-};
+        <div className="lg:col-span-4 lg:text-right">
+          <Button asChild>
+            <Link to={pages.join.path}>Join Senior Buddies</Link>
+          </Button>
+        </div>
+      </div>
+    </section>
+  </Layout>
+);
 
 export default Team;
