@@ -4,7 +4,25 @@ Website for **Senior Buddies**, a youth-led nonprofit in Durham Region, Ontario,
 
 **Live site:** https://seniorbuddiesdurham.ca
 
-![Senior Buddies home page](docs/screenshot.png)
+![Senior Buddies home page](docs/screenshots/home.jpg)
+
+<table>
+  <tr>
+    <td width="50%"><img src="docs/screenshots/about.jpg" alt="Senior Buddies about page"></td>
+    <td width="50%"><img src="docs/screenshots/team.jpg" alt="Senior Buddies team page"></td>
+  </tr>
+  <tr>
+    <td align="center">About</td>
+    <td align="center">Team</td>
+  </tr>
+</table>
+
+<table>
+  <tr>
+    <td align="center"><img src="docs/screenshots/mobile-home.jpg" width="260" alt="Home on a phone"><br>Home on a phone</td>
+    <td align="center"><img src="docs/screenshots/mobile-about.jpg" width="260" alt="About on a phone"><br>About on a phone</td>
+  </tr>
+</table>
 
 ## Who it's for
 
